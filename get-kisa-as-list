@@ -1,0 +1,46 @@
+#!/bin/env python3
+import html
+import html.parser
+import requests
+
+TARGET_URL = 'https://krnic.kisa.or.kr/jsp/business/management/asList.jsp'
+
+def sanitize_as_name (s: str):
+	return ' '.join(s.split())
+
+class KISAASListExtractor (html.parser.HTMLParser):
+	_table_started = False
+	_td = list[str]()
+	_tag_stack = list[str]()
+
+	def handle_starttag (self, tag, attrs):
+		self._tag_stack.append(tag) # FIXME: don't push void elements
+
+		if self._table_started:
+			if tag == 'tr':
+				self._td.clear()
+		else:
+			if tag == 'table':
+				attr_map = dict[str, str](attrs)
+
+				if attr_map.get('class') == 'datatable':
+					self._table_started = True
+
+	def handle_endtag (self, tag):
+		if self._table_started and tag == 'table':
+			self._table_started = False
+		if tag == 'tr' and self._td:
+			print("%-12s\t%s" % (self._td[1], sanitize_as_name(self._td[0])))
+
+		self._tag_stack.pop()
+
+	def handle_data (self, data):
+		if self._table_started and self._tag_stack[-1] == 'td':
+			self._td.append(data)
+
+
+doc_parser = KISAASListExtractor()
+
+with requests.get(TARGET_URL) as req:
+	raw = req.content.decode(req.encoding or 'utf-8')
+	doc_parser.feed(raw)

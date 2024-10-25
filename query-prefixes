@@ -1,0 +1,42 @@
+#!/bin/bash
+. common.sh
+
+PIPE_NAME="$$.fifo.tmp"
+
+if [ "$1" == "-6" ]; then
+	Q_PREFIX='!6'
+else
+	Q_PREFIX='!g'
+fi
+
+read_aslist () {
+	local asn
+
+	while read asn
+	do
+		echo ${asn} >&3
+		echo ${Q_PREFIX}${asn}
+	done
+}
+
+output_filter () {
+	local a
+	local b
+
+	while read -u 3 a && read -d '' b
+	do
+		printf '%-12s\t%s\n' "$a" "$b"
+	done
+}
+
+
+mkfifo "$PIPE_NAME" || exit 1
+grep -Eoi 'AS[0-9]+' |
+	read_aslist 3> "$PIPE_NAME" |
+	open_db |
+	extract_answer |
+	output_filter \
+		3< "$PIPE_NAME" &
+rm "$PIPE_NAME"
+
+wait

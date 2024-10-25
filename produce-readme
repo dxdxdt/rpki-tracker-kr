@@ -1,0 +1,19 @@
+#!/bin/env python3
+import datetime
+import getopt
+import sys
+
+opts, args = getopt.getopt(sys.argv[1:], '')
+
+now = datetime.datetime.now(datetime.UTC)
+with open(args[0]) as f:
+	table = f.read()
+with open(args[1]) as f:
+	table6 = f.read()
+doc = sys.stdin.read()
+
+doc = doc.replace('%LAST_UPDATE_ISOTIME%', now.isoformat())
+doc = doc.replace('%THE_TABLE_V4%', table)
+doc = doc.replace('%THE_TABLE_V6%', table6)
+
+sys.stdout.write(doc)

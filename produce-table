@@ -1,0 +1,74 @@
+#!/bin/env python3
+import csv
+import getopt
+import os
+import sys
+
+NB_BARS = 20
+output_format = "md"
+
+def key_f (element: tuple[str, str, int, int, float, str]):
+	return element[3]
+
+opts, args = getopt.getopt(sys.argv[1:], 'c')
+for optname, optval in opts:
+	if optname == '-c':
+		output_format = "csv"
+
+out = list[tuple[str, str, int, int, float, str]]()
+asn_ln_map = dict[str, str]()
+route_map = dict[str, set[str]]()
+rpki_enabled_set = set[str]()
+
+with open(args[0]) as f:
+	for line in f:
+		r = line.split('\t')
+		asn_ln_map[r[0].strip()] = r[1].strip()
+
+with open(args[1]) as f:
+	for line in f:
+		r = line.split('\t')
+		asn = r[0].strip()
+		s = route_map.get(asn)
+		route_map[asn] = set[str](r[1].split())
+
+with open(args[2]) as f:
+	for line in f:
+		rpki_enabled_set.add(line.strip())
+
+for asn, v in route_map.items():
+	nb_total = len(v)
+	if nb_total == 0:
+		continue
+
+	nb_rpki_enabled = 0
+	for prefix in v:
+		if prefix in rpki_enabled_set:
+			nb_rpki_enabled += 1
+
+	localname = asn_ln_map.get(asn, '')
+	ratio = nb_rpki_enabled / nb_total
+	nb_i = int(NB_BARS * ratio)
+	nb_e = NB_BARS - nb_i
+	bars = '█' * nb_i + '▒' * nb_e
+
+	out.append(( asn, localname, nb_rpki_enabled, nb_total, ratio, bars ))
+
+out.sort(key = key_f, reverse = True)
+
+if output_format == 'md':
+	print(
+'''| ASN | Name | RPKI | Total | % | Bars |
+|-|-|-:|-:|-:|-|'''
+		)
+	for r in out:
+		print(
+			"| %s | %s | %d | %d | %.2f%% | %s |" %
+			( r[0], r[1], r[2], r[3], r[4] * 100, r[5] ))
+elif output_format == 'csv':
+	w = csv.writer(sys.stdout)
+	w.writerow([ 'ASN', 'Name', 'RPKI', 'Total', '%' ])
+	for row in out:
+		w.writerow(row[:5])
+else:
+	os.abort()
