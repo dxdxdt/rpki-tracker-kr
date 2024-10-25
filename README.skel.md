@@ -1,5 +1,5 @@
 # 한국 인터넷 BGP 네트워크 RPKI 적용률 트래커
-- 나무위키 [2021년 10월 KT 인터넷 장애 사건](https://namu.wiki/w/2021%EB%85%84%2010%EC%9B%94%20KT%20%EC%9D%B8%ED%84%B0%EB%84%B7%20%EC%9E%A5%EC%95%A0%20%EC%82%AC%EA%B1%B4?from=2021%EB%85%84%2010%EC%9B%94%2025%EC%9D%BC%20KT%20%EC%9D%B8%ED%84%B0%EB%84%B7%20%EC%9E%A5%EC%95%A0%20%EC%82%AC%EA%B1%B4#s-4.5)
+- 나무위키 [2021년 10월 KT 인터넷 장애 사건](https://namu.wiki/w/2021%EB%85%84%2010%EC%9B%94%20KT%20%EC%9D%B8%ED%84%B0%EB%84%B7%20%EC%9E%A5%EC%95%A0%20%EC%82%AC%EA%B1%B4)
 - MTN 뉴스 [세계 표준되는 RPKI…우리나란 예산 '0원'](https://news.mtn.co.kr/news-detail/2024090813332917792)
 - KISA [라우팅 인증(RPKI)](https://한국인터넷정보센터.한국/jsp/resources/rpki.jsp)
 
@@ -27,7 +27,7 @@ UTC+9 기준 매주 월요일 자정에 업데이트 자동 업데이트 중(Git
 1. KISA [AS번호 사용자
    현황](https://krnic.kisa.or.kr/jsp/business/management/asList.jsp) 페이지
    로드, 테이블 파싱
-1. 파싱한 AS번호들 이용하여 [whois.radb.net](radb) 쿼리하여 라우팅 프리픽스
+1. 파싱한 AS번호들 이용하여 [whois.radb.net](https://radb.net) 쿼리하여 라우팅 프리픽스
    정보 받아오기
 1. 받아온 라우팅 프리픽스를 radb에 쿼리하여 `rpki-ov-state` 값이 `valid`인
    프리픽스만 추려냄
