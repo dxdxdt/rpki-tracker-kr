@@ -1,0 +1,9 @@
+@startuml pipe-bypass
+
+[read_aslist] -> [open_db]
+[open_db] -> [extract_answer]
+[extract_answer] -> [output_filter]
+
+read_aslist -> output_filter: FD #3
+
+@enduml

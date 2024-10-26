@@ -19,7 +19,7 @@ https://stat.ripe.net/ui2013/widget/rpki-by-country#w.resource=kr%2Cus%2Cjp%2Cau
 RPKI가 BGP 설정 오류로 인한 장애 예방에 좋으면 빨리 적용해야겠죠? 각 사업자의
 RPKI 적용률을 여기서 확인하세요.
 
-UTC+9 기준 매주 월요일 자정에 업데이트 자동 업데이트 중(Github Action).
+UTC+9 기준 매주 월요일 자정에 업데이트 자동 업데이트 중(Github Actions).
 
 ## 스크립트 실행 절차
 [Makefile 레시피](Makefile) 설명.
@@ -37,12 +37,27 @@ UTC+9 기준 매주 월요일 자정에 업데이트 자동 업데이트 중(Git
 ## 프리픽스 현황
 https://krnic.kisa.or.kr/jsp/business/management/asList.jsp
 
-- ASN: 자율시스템 번호
-- Name: 자율시스템 운영사
-- RPKI: 유효한 ROA가 적용된 라우팅 프리픽스 개수
-- Total: 총 라우팅 프리픽스 개수
-- %: RPKI/Total 백분율
-- Bars: 20점 만점 점수
+| 범례 | 설명 |
+| - | - |
+| ASN | 자율시스템 번호 |
+| Name | 자율시스템 운영사 |
+| RPKI | 유효한 ROA가 적용된 라우팅 프리픽스 개수 |
+| Total | 총 라우팅 프리픽스 개수 |
+| % | RPKI/Total 백분율 |
+| Bars | 20점 만점 점수 |
+
+AS는 [여러
+종류](https://en.wikipedia.org/wiki/Autonomous_system_(Internet)#Types)가
+있지만, [DFZ](https://en.wikipedia.org/wiki/Default-free_zone) 라우터에서 직접
+네트워크 구조를 분석하지 않는 이상, RADB의 정보만으로는 어떤 AS가 ISP와 IX인지,
+어떤 AS가 stub인지 알 수 없음. 이를 할 때 필요한 [LG
+서버](https://en.wikipedia.org/wiki/Looking_Glass_server)가 한국에 많이 존재하지
+않음. 하지만 인터넷 마비 예방은 ISP와 IX에서 운영되는 라우터에만 적용되어도
+충분히 예방될 수 있음. 단순 CDN 애니케스트나, CPE, 데이터센터인 stub AS에서 RPKI
+validation을 할 필요가 없기 때문에, 보급률이 100%가 될 필요는 없음. 이는 RIPE
+지역의 보급률이 80%인 사실로 확인할 수 있음.
+
+주의깊게 봐야할 AS들은 한국 기간망을 운영하는 통신 3사와 국내 IX임.
 
 **업데이트: %LAST_UPDATE_ISOTIME%**
 
