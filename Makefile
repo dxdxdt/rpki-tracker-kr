@@ -21,7 +21,8 @@ clean:
 		README.md
 
 aslist:
-	./get-kisa-as-list > aslist.tmp
+	curl -sS 'https://krnic.kisa.or.kr/jsp/business/management/asList.jsp' | \
+		./get-kisa-as-list > aslist.tmp
 	mv aslist.tmp aslist
 
 routelist: aslist

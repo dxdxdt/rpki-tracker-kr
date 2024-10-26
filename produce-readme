@@ -5,7 +5,11 @@ import sys
 
 opts, args = getopt.getopt(sys.argv[1:], '')
 
-now = datetime.datetime.now(datetime.UTC)
+try:
+	now = datetime.datetime.now(datetime.UTC)
+except AttributeError:
+	now = datetime.datetime.utcnow()
+
 with open(args[0]) as f:
 	table = f.read()
 with open(args[1]) as f:
