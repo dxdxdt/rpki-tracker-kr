@@ -1,9 +1,7 @@
 #!/bin/env python3
 import html
 import html.parser
-import requests
-
-TARGET_URL = 'https://krnic.kisa.or.kr/jsp/business/management/asList.jsp'
+import sys
 
 def sanitize_as_name (s: str):
 	return ' '.join(s.split())
@@ -40,7 +38,4 @@ class KISAASListExtractor (html.parser.HTMLParser):
 
 
 doc_parser = KISAASListExtractor()
-
-with requests.get(TARGET_URL) as req:
-	raw = req.content.decode(req.encoding or 'utf-8')
-	doc_parser.feed(raw)
+doc_parser.feed(sys.stdin.read())
