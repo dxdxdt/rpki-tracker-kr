@@ -1,0 +1,25 @@
+name: rpki-tracker-kr snapshot automation
+run-name: ${{ github.actor }}가 RPKI 보급률 데이터를 업데이트 중
+on:
+  schedule:
+    - cron: "00 00 * * mon"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  Do-snapshot:
+    name: Do data dump snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run make
+        run: |
+          make clean
+          make
+      - name: Do commit
+        run: |
+          git config --global user.name 'Snapshot Automation Bot'
+          git config --global user.email '_@users.noreply.github.com'
+          git add --all
+          git commit -sm 'Data snapshot commit'
+          git push
