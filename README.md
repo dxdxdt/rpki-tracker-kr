@@ -19,7 +19,11 @@ https://stat.ripe.net/ui2013/widget/rpki-by-country#w.resource=kr%2Cus%2Cjp%2Cau
 RPKI가 BGP 설정 오류로 인한 장애 예방에 좋으면 빨리 적용해야겠죠? 각 사업자의
 RPKI 적용률을 여기서 확인하세요.
 
-UTC+9 기준 매주 월요일 자정에 업데이트 자동 업데이트 중(Github Action).
+UTC 기준 매주 월요일 자정에 업데이트 자동 업데이트 중([Github
+Actions](https://github.com/dxdxdt/rpki-tracker-kr/actions)). 데이터는
+`master`에 자동으로 커밋됨. 개발 편의를 위해 `dev`와 `stable` 브랜치에서는
+데이터 파일이 트래킹되지 않음. 소스코드 수정은 해당 브랜치에서 진행, CD/CI에
+적용 필요 시 `master`와 머지.
 
 ## 스크립트 실행 절차
 [Makefile 레시피](Makefile) 설명.
@@ -37,14 +41,29 @@ UTC+9 기준 매주 월요일 자정에 업데이트 자동 업데이트 중(Git
 ## 프리픽스 현황
 https://krnic.kisa.or.kr/jsp/business/management/asList.jsp
 
-- ASN: 자율시스템 번호
-- Name: 자율시스템 운영사
-- RPKI: 유효한 ROA가 적용된 라우팅 프리픽스 개수
-- Total: 총 라우팅 프리픽스 개수
-- %: RPKI/Total 백분율
-- Bars: 20점 만점 점수
+| 범례 | 설명 |
+| - | - |
+| ASN | 자율시스템 번호 |
+| Name | 자율시스템 운영사 |
+| RPKI | 유효한 ROA가 적용된 라우팅 프리픽스 개수 |
+| Total | 총 라우팅 프리픽스 개수 |
+| % | RPKI/Total 백분율 |
+| Bars | 20점 만점 점수 |
 
-**업데이트: 2024-10-25T21:50:09.810874+00:00**
+AS는 [여러
+종류](https://en.wikipedia.org/wiki/Autonomous_system_(Internet)#Types)가
+있지만, [DFZ](https://en.wikipedia.org/wiki/Default-free_zone) 라우터에서 직접
+네트워크 구조를 분석하지 않는 이상, RADB의 정보만으로는 어떤 AS가 ISP와 IX인지,
+어떤 AS가 stub인지 알 수 없음. 이를 할 때 필요한 [LG
+서버](https://en.wikipedia.org/wiki/Looking_Glass_server)가 한국에 많이 존재하지
+않음. 하지만 인터넷 마비 예방은 ISP와 IX에서 운영되는 라우터에만 적용되어도
+충분히 예방될 수 있음. 단순 CDN 애니케스트나, CPE, 데이터센터인 stub AS에서 RPKI
+validation을 할 필요가 없기 때문에, 보급률이 100%가 될 필요는 없음. 이는 RIPE
+지역의 보급률이 80%인 사실로 확인할 수 있음.
+
+주의깊게 봐야할 AS들은 한국 기간망을 운영하는 통신 3사와 국내 IX임.
+
+**업데이트: 2024-10-28T13:05:41.458854**
 
 ### IPv4
 | ASN | Name | RPKI | Total | % | Bars |
@@ -268,6 +287,7 @@ https://krnic.kisa.or.kr/jsp/business/management/asList.jsp
 | AS10167 | 우리에프아이에스(주) | 0 | 27 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
 | AS17575 | 중앙대학교 | 0 | 27 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
 | AS9523 | 목원대학교 | 0 | 27 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
+| AS9712 | 주식회사 아이네트 | 1 | 27 | 3.70% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
 | AS9871 | 경상북도교육청 | 0 | 27 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
 | AS23759 | 티엠정보통신 주식회사 | 0 | 27 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
 | AS38700 | 주식회사 스마일서브 | 0 | 27 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
@@ -278,7 +298,6 @@ https://krnic.kisa.or.kr/jsp/business/management/asList.jsp
 | AS45969 | (주)케이지이니시스 | 0 | 27 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
 | AS9696 | 오스카엔터프라이즈 | 0 | 26 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
 | AS9949 | (학)호서대학교 | 0 | 26 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
-| AS9712 | 주식회사 아이네트 | 1 | 26 | 3.85% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
 | AS18026 | 제주대학교정보화본부 | 0 | 26 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
 | AS46009 | 주식회사 야베스케이 | 0 | 26 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
 | AS55586 | 가톨릭대학교성심교정 | 0 | 26 | 0.00% | ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ |
@@ -968,14 +987,14 @@ https://krnic.kisa.or.kr/jsp/business/management/asList.jsp
 ## Usage
 ### INSTALL
 ```sh
-dnf install make python3
+dnf install curl netcat make python3
+git clone https://github.com/dxdxdt/rpki-tracker-kr
 ```
 
 ### Generate
 실행 시간 5분 내외. 메모리 사용량(RSS): 약 50MB
 
 ```sh
-git clone https://github.com/dxdxdt/rpki-tracker-kr
 make clean
 make
 ```
