@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 . common.sh
 
 read_prefixes () {
@@ -25,4 +26,5 @@ process_result () {
 }
 
 
+set -o pipefail
 read_prefixes | open_db | extract_answer | process_result

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 . common.sh
 
 PIPE_NAME="$$.fifo.tmp"
@@ -14,7 +15,6 @@ read_aslist () {
 
 	while read asn
 	do
-		echo ${asn} >&3
 		echo ${Q_PREFIX}${asn}
 	done
 }
@@ -30,13 +30,5 @@ output_filter () {
 }
 
 
-mkfifo "$PIPE_NAME" || exit 1
-grep -Eoi 'AS[0-9]+' |
-	read_aslist 3> "$PIPE_NAME" |
-	open_db |
-	extract_answer |
-	output_filter \
-		3< "$PIPE_NAME" &
-rm "$PIPE_NAME"
-
-wait
+set -o pipefail
+read_aslist | open_db | extract_answer | output_filter

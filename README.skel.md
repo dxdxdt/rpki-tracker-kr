@@ -19,7 +19,11 @@ https://stat.ripe.net/ui2013/widget/rpki-by-country#w.resource=kr%2Cus%2Cjp%2Cau
 RPKI가 BGP 설정 오류로 인한 장애 예방에 좋으면 빨리 적용해야겠죠? 각 사업자의
 RPKI 적용률을 여기서 확인하세요.
 
-UTC+9 기준 매주 월요일 자정에 업데이트 자동 업데이트 중(Github Actions).
+UTC 기준 매주 월요일 자정에 업데이트 자동 업데이트 중([Github
+Actions](https://github.com/dxdxdt/rpki-tracker-kr/actions)). 데이터는
+`master`에 자동으로 커밋됨. 개발 편의를 위해 `dev`와 `stable` 브랜치에서는
+데이터 파일이 트래킹되지 않음. 소스코드 수정은 해당 브랜치에서 진행, CD/CI에
+적용 필요 시 `master`와 머지.
 
 ## 스크립트 실행 절차
 [Makefile 레시피](Makefile) 설명.
@@ -70,14 +74,14 @@ validation을 할 필요가 없기 때문에, 보급률이 100%가 될 필요는
 ## Usage
 ### INSTALL
 ```sh
-dnf install make python3
+dnf install curl netcat make python3
+git clone https://github.com/dxdxdt/rpki-tracker-kr
 ```
 
 ### Generate
 실행 시간 5분 내외. 메모리 사용량(RSS): 약 50MB
 
 ```sh
-git clone https://github.com/dxdxdt/rpki-tracker-kr
 make clean
 make
 ```
