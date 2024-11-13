@@ -23,3 +23,18 @@ jobs:
           git add --all
           git commit -sm 'Data snapshot commit'
           git push
+      - name: Install SSH secrets
+        env:
+          SSH_KEY: ${{ secrets.MIRROR_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.MIRROR_SSH_KNOWN_HOSTS }}
+        run: |
+          pushd ~
+          mkdir -p .ssh .ssh_keys
+          echo "$SSH_KNOWN_HOSTS" >> .ssh/known_hosts
+          echo "$SSH_KEY" > .ssh_keys/dxdxdt@cdci-rpki-tracker-kr
+          chmod 700 .ssh .ssh_keys
+          chmod 600 .ssh/known_hosts .ssh_keys/dxdxdt@cdci-rpki-tracker-kr
+          popd
+      - name: Sync mirrors
+        run: |
+          ssh -T -i ~/.ssh_keys/dxdxdt@cdci-rpki-tracker-kr cdci@embla.dev.snart.me
