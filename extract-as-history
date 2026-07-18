@@ -1,0 +1,38 @@
+#/bin/bash
+set -e
+EPOCH_DATA_COMMIT="$(git rev-list -n1 data-epoch)"
+TARGET_AS_LIST_FILE="$1"
+DATA_FILE="$2"
+TS_START="$(date -Is)"
+
+extract_as () {
+	local list=""
+	local s=""
+	local fexp
+
+	for as in $(cat "$TARGET_AS_LIST_FILE")
+	do
+		list="$list$s$as"
+		s="|"
+	done
+	fexp="^($list),"
+
+	tail -n +1 | grep -E "$fexp" | while read l
+	do
+		echo "$1,$2,$l"
+	done
+}
+
+extract_as HEAD "$TS_START" < "$DATA_FILE"
+
+i=0
+while true
+do
+	commit_hash="$(git rev-list -n1 HEAD~$i)"
+	ts_commit="$(git show --no-patch --format=%cI $commit_hash)"
+
+	git show "HEAD~$i:$DATA_FILE" | extract_as "$commit_hash" "$ts_commit"
+
+	[ "$commit_hash" = "$EPOCH_DATA_COMMIT" ] && break
+	i=$(( i + 1 ))
+done

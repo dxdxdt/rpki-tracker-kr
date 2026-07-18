@@ -1,6 +1,6 @@
 all: README.md result.csv result6.csv
 
-README.md: table.md table6.md
+README.md: table.md table6.md topas-history.svg topas-history6.svg
 	./produce-readme table.md table6.md < README.skel.md > README.md.tmp
 	mv README.md.tmp README.md
 
@@ -19,7 +19,13 @@ clean:
 		table6.md \
 		result.csv \
 		result6.csv \
-		README.md
+		README.md \
+		topas \
+		topas6 \
+		topas-history \
+		topas-history6 \
+		topas-history.svg \
+		topas-history6.svg
 
 asmap:
 	curl -sS 'https://krnic.kisa.or.kr/jsp/business/management/asList.jsp' | \
@@ -57,3 +63,24 @@ result.csv: asmap routelist rpki-enabled
 result6.csv: asmap route6list rpki6-enabled
 	./produce-table -c asmap route6list rpki6-enabled > result6.csv.tmp
 	mv result6.csv.tmp result6.csv
+
+topas: asmap routelist rpki-enabled
+	./produce-table -t asmap routelist rpki-enabled > topas.tmp
+	mv topas.tmp topas
+topas6: asmap route6list rpki6-enabled
+	./produce-table -t asmap route6list rpki6-enabled > topas6.tmp
+	mv topas6.tmp topas6
+
+topas-history: result.csv topas
+	./extract-as-history "topas" "result.csv" > topas-history.tmp
+	mv topas-history.tmp topas-history
+topas-history6: result6.csv topas6
+	./extract-as-history "topas6" "result6.csv" > topas-history6.tmp
+	mv topas-history6.tmp topas-history6
+
+topas-history.svg: topas-history
+	./plot-history < topas-history > topas-history.svg.tmp
+	mv topas-history.svg.tmp topas-history.svg
+topas-history6.svg: topas-history6
+	./plot-history < topas-history6 > topas-history6.svg.tmp
+	mv topas-history6.svg.tmp topas-history6.svg

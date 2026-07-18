@@ -1,0 +1,69 @@
+#!/bin/env python3
+import sys
+import csv
+import datetime
+import matplotlib.pyplot as plt
+from rpkitracker import *
+
+hashset = set[tuple[str, datetime.datetime, str]]()
+dmap = dict[datetime.datetime, dict[str, Row]]()
+as_set = set[str]()
+as_name_map = dict[str, str]()
+dates = list[datetime.datetime]()
+
+reader = csv.reader(sys.stdin)
+for row in reader:
+	element = Row(row[2], row[3], int(row[4]), int(row[5]), float(row[6]))
+	as_name_map[element.asn] = element.name
+	ts = datetime.datetime.fromisoformat(row[1])
+	tpl = (row[0], ts, element.asn,)
+	assert(tpl not in hashset)
+	hashset.add(tpl)
+
+	as_set.add(element.asn)
+
+	m = dmap.setdefault(ts, dict[str, Row]())
+	m[element.asn] = element
+
+	dates.append(ts)
+
+del hashset
+dates.sort()
+pd_date = list[str]([ d.date().isoformat() for d in dates ])
+
+fig, (ax) = plt.subplots(1, 1, constrained_layout = True, figsize = [ 8.0, 4.0 ])
+
+for asn in as_set:
+	pd_percent = list[float]()
+
+	for date in dates:
+		try:
+			element = dmap[date][asn]
+			ratio = element.rpki_cnt / element.total_cnt * 100.0
+			if ratio > 100.0:
+				ratio = 100.0
+			pd_percent.append(ratio)
+		except KeyError:
+			pd_percent.append(None)
+
+	assert(len(pd_percent) == len(pd_date))
+
+	as_name = as_name_map.get(asn)
+	if as_name is not None:
+		as_name = "\n" + as_name
+	else:
+		as_name = ""
+	# label = asn + as_name
+	label = asn
+
+	ax.plot(pd_date, pd_percent, label = label)
+
+ax.legend(loc = 'upper right')
+ax.set_ylabel('RPKI enabled route')
+ax.yaxis.set_ticks([0.0, 100.0])
+ax.xaxis.set_major_locator(plt.MaxNLocator(6))
+
+if sys.stdout.isatty():
+	plt.show()
+else:
+	plt.savefig('/dev/stdout', format = 'svg')

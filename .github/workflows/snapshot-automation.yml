@@ -11,11 +11,16 @@ jobs:
     name: Do data dump snapshot
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - run: |
+          sudo apt -y install python3-matplotlib
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - name: Run make
+        shell: bash
         run: |
           make clean
-          make
+          make -j$(nproc)
       - name: Do commit
         run: |
           git config --global user.name 'Snapshot Automation Bot'
