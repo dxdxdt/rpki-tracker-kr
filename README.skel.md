@@ -36,6 +36,7 @@ Actions](https://github.com/dxdxdt/rpki-tracker-kr/actions)). 데이터는
 1. 받아온 라우팅 프리픽스를 radb에 쿼리하여 `rpki-ov-state` 값이 `valid`인
    프리픽스만 추려냄
 1. 데이터 취합 후 markdown테이블과 csv 파일 생성
+1. 라우팅 프리픽스에 RPKI를 적용한 상위 AS 추출, 과거 데이터 취합, SVG 그래프 생성
 1. READMD.md 생성, 테이블 삽입
 
 ## 프리픽스 현황
@@ -66,9 +67,13 @@ validation을 할 필요가 없기 때문에, 보급률이 100%가 될 필요는
 **업데이트: %LAST_UPDATE_ISOTIME%**
 
 ### IPv4
+![IPv4 deployment history](topas-history.svg)
+
 %THE_TABLE_V4%
 
 ### IPv6
+![IPv6 deployment history](topas-history6.svg)
+
 %THE_TABLE_V6%
 
 ## Usage
